@@ -1,0 +1,6 @@
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\produs\bin\Debug\produs.dll
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\produs\bin\Debug\produs.pdb
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\produs\obj\Debug\produs.csproj.AssemblyReference.cache
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\produs\obj\Debug\produs.csproj.CoreCompileInputs.cache
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\produs\obj\Debug\produs.dll
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\produs\obj\Debug\produs.pdb

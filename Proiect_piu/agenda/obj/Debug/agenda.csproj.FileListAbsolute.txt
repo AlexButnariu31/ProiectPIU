@@ -1,0 +1,11 @@
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\agenda\bin\Debug\agenda.dll
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\agenda\bin\Debug\agenda.pdb
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\agenda\bin\Debug\produs.dll
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\agenda\bin\Debug\produs.pdb
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\agenda\obj\Debug\agenda.csproj.AssemblyReference.cache
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\agenda\obj\Debug\agenda.csproj.CoreCompileInputs.cache
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\agenda\obj\Debug\agenda.csproj.Up2Date
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\agenda\obj\Debug\agenda.dll
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\agenda\obj\Debug\agenda.pdb
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\agenda\bin\Debug\Client.dll
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\agenda\bin\Debug\Client.pdb

@@ -1,0 +1,6 @@
+D:\coduri\VISUAL_sTUDIO\Client\bin\Debug\Client.dll
+D:\coduri\VISUAL_sTUDIO\Client\bin\Debug\Client.pdb
+D:\coduri\VISUAL_sTUDIO\Client\obj\Debug\Client.csproj.AssemblyReference.cache
+D:\coduri\VISUAL_sTUDIO\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
+D:\coduri\VISUAL_sTUDIO\Client\obj\Debug\Client.dll
+D:\coduri\VISUAL_sTUDIO\Client\obj\Debug\Client.pdb
