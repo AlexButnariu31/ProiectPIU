@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Administrare_client_produs.cs" />
-    <Compile Include="Agenda.cs" />
+    <Compile Include="Administrare_client.cs" />
+    <Compile Include="Administrare_client_fisier.cs" />
+    <Compile Include="Administrare_produs.cs" />
+    <Compile Include="Administrare_produs_fisier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
