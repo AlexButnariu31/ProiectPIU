@@ -1,3 +1,4 @@
+using produs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,9 @@ namespace incercare_tema
     public class Calculator
     {
         private const char SEPARATOR_FISIER = ';';
-
-        string nume, marca ;
+        public Servicii serv { get; set; }
+        string nume { get; set; }
+        string marca { get; set; }
 
         public Calculator()
         {
@@ -25,16 +27,16 @@ namespace incercare_tema
         }
         public string Info()
         {
-            return $"Nume:{nume}, Marca:{marca}";
+            return $"Nume:{nume}, Marca:{marca}, Scopul aducerii: {serv}";
         }
 
          public string Conv_sir_fisier()
         {
-            string obiect_pers_fis = string.Format("{1}{0}{2}{0}",
+            string obiect_pers_fis = string.Format("{1}{0}{2}{0}{3}",
                 SEPARATOR_FISIER,
                 (nume ?? "NECUNOSCUT"),
-                (marca ?? "NECUNOSCUT")
-                );
+                (marca ?? "NECUNOSCUT"),
+                serv);
             return obiect_pers_fis;
         }
 
@@ -43,6 +45,7 @@ namespace incercare_tema
             var dateFisier = linieFisier.Split(SEPARATOR_FISIER);
             this.nume = dateFisier[0];
             this.marca = dateFisier[1];
+            serv = (Servicii)Enum.Parse(typeof(Servicii), dateFisier[2]);
         }
     }
 }
