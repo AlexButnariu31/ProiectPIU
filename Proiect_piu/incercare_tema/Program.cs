@@ -1,4 +1,5 @@
 using agenda;
+using produs;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -68,7 +69,7 @@ namespace incercare_tema
             Console.WriteLine();
             Console.WriteLine();
             
-            int numar_prod = 0;
+            //int numar_prod = 0;
             int nr;
             //string sir;
             //sir=Console.ReadLine();
@@ -92,12 +93,27 @@ namespace incercare_tema
                 Calculator calc = new Calculator(numc, marc);
                 //admin_c.AddClient(pers);
                 //admin_p.AddProd(calc);
+                Console.WriteLine("Alegeti un serviciu: ");
+                Console.WriteLine("Reparare= 1,\n" +
+                    "Verificare = 2,\n"+
+                    "Schimbare_piese = 3,\n"+
+                    "Clonare_Hardrive = 4,\n"+
+                    "Instalare_os = 5\n");
+                string opt = Console.ReadLine();
+                bool valid = Enum.TryParse(opt, out Servicii srv);
+                if (valid && Enum.IsDefined(typeof(Servicii), srv))
+                {
+                    calc.serv = srv;
+                }
                 adminclienti.AddClient(pers);
                 adminprodus.AddProdus(calc);
                 Console.WriteLine();
 
+
+
             }
             Console.WriteLine();
+            /*
             Persoana[] persoane = admin_c.Get_client(out numar_prod);
 
             Calculator[] pcuri = admin_p.Get_produse(out numar_prod);
@@ -109,6 +125,7 @@ namespace incercare_tema
                 string info_calc = pcuri[c].Info();
                 Console.WriteLine($"{info_pers} detine calculatorul: {info_calc}");
             }
+            */
             using (StreamReader sr = new StreamReader(numeFisier_c))
             {
                 string linie;
@@ -119,6 +136,19 @@ namespace incercare_tema
                     Console.WriteLine($"{info_p_1}");
                 }
             }
+
+            using (StreamReader sr = new StreamReader(numeFisier_pc))
+            {
+                string linie;
+                while ((linie = sr.ReadLine()) != null)
+                {
+                    Calculator c_1 = new Calculator(linie);
+                    string info_c_1 = c_1.Info();
+                    Console.WriteLine($"{info_c_1}");
+                }
+            }
+
+
             /*
              public static void AfisareStudenti(Student[] studenti, int nrStudenti)
         {
