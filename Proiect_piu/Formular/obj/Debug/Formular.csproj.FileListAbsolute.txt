@@ -1,0 +1,17 @@
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\bin\Debug\Formular.exe.config
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\bin\Debug\Formular.exe
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\bin\Debug\Formular.pdb
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\bin\Debug\agenda.dll
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\bin\Debug\Client.dll
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\bin\Debug\produs.dll
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\bin\Debug\agenda.pdb
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\bin\Debug\Client.pdb
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\bin\Debug\produs.pdb
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\obj\Debug\Formular.csproj.AssemblyReference.cache
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\obj\Debug\Formular.Form1.resources
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\obj\Debug\Formular.Properties.Resources.resources
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\obj\Debug\Formular.csproj.GenerateResource.cache
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\obj\Debug\Formular.csproj.CoreCompileInputs.cache
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\obj\Debug\Formular.csproj.Up2Date
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\obj\Debug\Formular.exe
+D:\coduri\VISUAL_sTUDIO\Proiect_piu\Formular\obj\Debug\Formular.pdb
