@@ -8,6 +8,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using WinFormsApplication = System.Windows.Forms.Application;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace incercare_tema
 {
@@ -126,6 +129,7 @@ namespace incercare_tema
                 Console.WriteLine($"{info_pers} detine calculatorul: {info_calc}");
             }
             */
+            Console.WriteLine("Clientii sunt:");
             using (StreamReader sr = new StreamReader(numeFisier_c))
             {
                 string linie;
@@ -136,7 +140,7 @@ namespace incercare_tema
                     Console.WriteLine($"{info_p_1}");
                 }
             }
-
+            Console.WriteLine("Calculatoarele sunt:");
             using (StreamReader sr = new StreamReader(numeFisier_pc))
             {
                 string linie;
@@ -147,7 +151,10 @@ namespace incercare_tema
                     Console.WriteLine($"{info_c_1}");
                 }
             }
-
+            WinFormsApplication.EnableVisualStyles();
+            WinFormsApplication.SetCompatibleTextRenderingDefault(false);
+            Form form1 = new Form();
+            WinFormsApplication.Run(form1);
 
             /*
              public static void AfisareStudenti(Student[] studenti, int nrStudenti)
