@@ -1,4 +1,4 @@
-﻿using agenda;
+using agenda;
 using System;
 using System.Configuration;
 using System.Collections.Generic;
@@ -19,14 +19,14 @@ namespace Formular
         [STAThread]
         static void Main()
         {
-            Formular form1 = new Formular();
+            Formular_ form1 = new Formular_();
             form1.Show();
             Application.Run();
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
         }
-        public class Formular : Form
+        public class Formular_ : Form
         {
             private Label lblLungime;
             private TextBox txtLungime;
@@ -38,7 +38,7 @@ namespace Formular
             private const int DIMENSIUNE_PAS_Y = 30;
             private const int DIMENSIUNE_PAS_X = 170;
 
-            public Formular()
+            public Formular_()
             {
 
                 string numeFisier = ConfigurationManager.AppSettings["NumeFisier"];
@@ -55,43 +55,29 @@ namespace Formular
                 this.Location = new Point(100, 100);
                 this.Font = new Font("Arial", 9, FontStyle.Bold);
                 this.ForeColor = Color.LimeGreen;
-                this.Text = "Informatii dreptunghi";
+                this.Text = "Informatii clienti";
 
-                //adaugare control de tip Label pentru 'Lungime';
                 lblLungime = new Label
                 {
                     Width = LATIME_CONTROL,
-                    Text = "Lungime:",
+                    Text = "Nume complet:",
                     BackColor = Color.LightYellow
                 };
                 this.Controls.Add(lblLungime);
 
-                //adaugare control de tip TextBox pentru 'Lungime';
                 txtLungime = new TextBox
                 {
                     Width = LATIME_CONTROL,
                     Left = DIMENSIUNE_PAS_X
                 };
-                //this.Controls.Add(txtLungime);
 
-
-                //adaugare control de tip Label pentru 'Latime';
-                lblLatime = new Label
-                {
-                    Width = LATIME_CONTROL,
-                    Text = "Latime:",
-                    Top = DIMENSIUNE_PAS_Y,
-                    BackColor = Color.LightYellow
-                };
-                this.Controls.Add(lblLatime);
-
-                //adaugare control de tip TextBox pentru 'Latime'
                 txtLatime = new TextBox
                 {
                     Width = LATIME_CONTROL,
                     Location = new Point(DIMENSIUNE_PAS_X, DIMENSIUNE_PAS_Y)
                 };
                 this.Controls.Add(txtLatime);
+
 
             }
         }
