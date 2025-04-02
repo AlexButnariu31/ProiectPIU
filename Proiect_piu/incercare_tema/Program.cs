@@ -153,7 +153,7 @@ namespace incercare_tema
             }
             WinFormsApplication.EnableVisualStyles();
             WinFormsApplication.SetCompatibleTextRenderingDefault(false);
-            Form form1 = new Form();
+            Form form1 = new Formular.Form1();
             WinFormsApplication.Run(form1);
 
             /*
