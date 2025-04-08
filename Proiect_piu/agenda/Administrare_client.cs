@@ -1,4 +1,4 @@
-﻿using incercare_tema;
+using incercare_tema;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,20 +33,25 @@ namespace agenda
 
         public Persoana Cautare_client(string nume_c, string prenume_c)
         {
-            Persoana pers_c;
-            pers_c = new Persoana(nume_c, prenume_c);
-            foreach (Persoana prod in persoane)
+            if (string.IsNullOrEmpty(nume_c) && string.IsNullOrEmpty(prenume_c))
+                return new Persoana(string.Empty, string.Empty);
+            Persoana clientCautat = new Persoana(
+                nume_c ?? string.Empty,
+                prenume_c ?? string.Empty);
+            foreach (Persoana client in persoane)
             {
-                if (pers_c == prod)
+                if (client == null) continue;
+
+                bool numeMatches = string.IsNullOrEmpty(nume_c) ||
+                                  client.nume.Equals(clientCautat.nume, StringComparison.OrdinalIgnoreCase);
+                bool prenumeMatches = string.IsNullOrEmpty(prenume_c) ||
+                                     client.prenume.Equals(clientCautat.prenume, StringComparison.OrdinalIgnoreCase);
+                if (numeMatches && prenumeMatches)
                 {
-                    return pers_c;
-
+                    return client;
                 }
-
             }
-            Persoana p;
-            p = new Persoana(string.Empty, string.Empty);
-            return p;
+            return new Persoana(string.Empty, string.Empty);
         }
         /*
         public (Student[] studenti, Clase[] clase, int nrStudenti, int nrClase) GetStudentiSiClase()
