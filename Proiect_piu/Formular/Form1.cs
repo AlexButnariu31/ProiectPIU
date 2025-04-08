@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -224,6 +224,66 @@ namespace Formular
                 {
                     listBoxClienti.Items.Add("Nu există clienți în fișier!");
                     listBoxClienti.ForeColor = Color.Red;
+                }
+            };
+
+            Button btnCautare = new Button
+            {
+                Text = "Caută Client",
+                Top = btnAdauga.Bottom + 20, 
+                Left = 20,
+                Width = 200,
+                Height = 40,
+                BackColor = Color.Gold,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Comic Sans MS", 12, FontStyle.Bold)
+            };
+            leftPanel.Controls.Add(btnCautare);
+
+            Label lblRezultatCautare = new Label
+            {
+                Top = btnCautare.Bottom + 20,
+                Left = 20,
+                Width = 200,
+                AutoSize = true,
+                Font = new Font("Comic Sans MS", 12),
+                ForeColor = Color.Black
+            };
+            leftPanel.Controls.Add(lblRezultatCautare);
+
+            btnCautare.Click += (sender, e) =>
+            {
+                if (!string.IsNullOrEmpty(txtNume.Text) || !string.IsNullOrEmpty(txtPrenume.Text))
+                {
+                    Administrare_client adminClient = new Administrare_client();
+                    int nrClient;
+                    Persoana[] clienti = adminC.Get_persoane(out nrClient);
+                    foreach (var client in clienti)
+                    {
+                        if (client != null)
+                            adminClient.AddClient(client);
+                    }
+
+                    Persoana clientGasit = adminClient.Cautare_client(
+                        txtNume.Text.Trim(),
+                        txtPrenume.Text.Trim());
+                    if (!string.IsNullOrEmpty(clientGasit.nume) || !string.IsNullOrEmpty(clientGasit.prenume))
+                    {
+                        lblRezultatCautare.Text = "Client găsit:\n" + clientGasit.Info_p();
+                        lblRezultatCautare.ForeColor = Color.Green;
+                    }
+                    else
+                    {
+                        lblRezultatCautare.Text = "Clientul nu a fost găsit!";
+                        lblRezultatCautare.ForeColor = Color.Red;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Introduceți numele sau prenumele clientului!",
+                                   "Eroare",
+                                   MessageBoxButtons.OK,
+                                   MessageBoxIcon.Warning);
                 }
             };
 
