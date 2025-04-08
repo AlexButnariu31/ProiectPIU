@@ -12,8 +12,8 @@ namespace incercare_tema
     {
         private const char SEPARATOR_FISIER = ';';
 
-        string nume;
-        string prenume;
+        public string nume { get; set; }
+        public string prenume { get; set; }
 
         public Persoana()
         {
@@ -48,7 +48,19 @@ namespace incercare_tema
             this.nume = dateFisier[0];
             this.prenume = dateFisier[1];
         }
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
 
+            Persoana p = (Persoana)obj;
+            return (nume == p.nume) && (prenume == p.prenume);
+        }
+
+        public override int GetHashCode()
+        {
+            return (nume + prenume).GetHashCode();
+        }
         /*
          * public string ConversieLaSir_PentruFisier()
     {
