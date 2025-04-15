@@ -1,4 +1,4 @@
-﻿using agenda;
+using agenda;
 using System;
 using System.Configuration;
 using System.Collections.Generic;
@@ -21,8 +21,10 @@ namespace Formular
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form form1 = new Form1();
-            Application.Run(form1);
+
+            // Initialize the application settings
+            Form form3 = new Form3();
+            Application.Run(form3);
         } 
     }
 }
