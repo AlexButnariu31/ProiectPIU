@@ -13,30 +13,27 @@ using incercare_tema;
 using System.Configuration;
 using System.IO;
 
-
 namespace Formular
 {
     public partial class Form1 : Form
     {
         private Label lblLungime;
         private TextBox txtLungime;
-
         private TextBox txtLatime;
-
         private const int LATIME_CONTROL = 150;
         private const int DIMENSIUNE_PAS_Y = 30;
         private const int DIMENSIUNE_PAS_X = 170;
         int leftMargin = 20;
         int controlWidth = 200;
+        private Administrare_client_fisier adminC;
+        private ListBox listBoxClienti;
+        private TextBox txtNume;
+        private TextBox txtPrenume;
 
         public Form1()
         {
-
             string numeFisier = ConfigurationManager.AppSettings["NumeFisier_c"];
-            Administrare_client_fisier adminC = new Administrare_client_fisier(numeFisier);
-            int nrClienti = 0;
-            Persoana[] persoane = adminC.Get_persoane(out nrClienti);
-
+            adminC = new Administrare_client_fisier(numeFisier);
 
             this.Size = new Size(1000, 650);
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -50,7 +47,7 @@ namespace Formular
             {
                 Dock = DockStyle.Fill,
                 Orientation = Orientation.Horizontal,
-                SplitterDistance = 70, 
+                SplitterDistance = 70,
                 FixedPanel = FixedPanel.Panel1
             };
 
@@ -115,9 +112,7 @@ namespace Formular
             };
             leftPanel.Controls.Add(lblNume);
 
-            
-
-            TextBox txtNume = new TextBox
+            txtNume = new TextBox
             {
                 Top = lblNume.Bottom + 5,
                 Left = leftMargin,
@@ -135,7 +130,7 @@ namespace Formular
             };
             leftPanel.Controls.Add(lblPrenume);
 
-            TextBox txtPrenume = new TextBox
+            txtPrenume = new TextBox
             {
                 Top = lblPrenume.Bottom + 5,
                 Left = leftMargin,
@@ -185,11 +180,11 @@ namespace Formular
             };
             rightPanel.Controls.Add(btnAfiseaza);
 
-            ListBox listBoxClienti = new ListBox
+            listBoxClienti = new ListBox
             {
                 Top = btnAfiseaza.Bottom + 20,
                 Left = 30,
-                Width = rightPanel.Width + 120,
+                Width = rightPanel.Width + 280,
                 Height = rightPanel.Height - btnAfiseaza.Bottom - 50,
                 Font = new Font("Comic Sans MS", 12),
                 ForeColor = Color.Blue,
@@ -199,38 +194,12 @@ namespace Formular
             };
             rightPanel.Controls.Add(listBoxClienti);
 
-            btnAfiseaza.Click += (sender, e) =>
-            {
-                int clientCount;
-                Persoana[] clientList = adminC.Get_persoane(out clientCount);
-
-                listBoxClienti.Items.Clear();
-                if (clientList != null && clientCount > 0)
-                {
-                    listBoxClienti.BeginUpdate();
-                    foreach (Persoana persoana in clientList)
-                    {
-                        if (persoana != null)
-                        {
-                            listBoxClienti.Items.Add(persoana.Info_p());
-                        }
-                    }
-                    listBoxClienti.EndUpdate();
-                    int requiredHeight = (listBoxClienti.Items.Count * listBoxClienti.Font.Height) + 10;
-                    int maxHeight = rightPanel.Height - btnAfiseaza.Bottom - 50;
-                    listBoxClienti.Height = Math.Min(requiredHeight, maxHeight);
-                }
-                else
-                {
-                    listBoxClienti.Items.Add("Nu există clienți în fișier!");
-                    listBoxClienti.ForeColor = Color.Red;
-                }
-            };
+            btnAfiseaza.Click += (sender, e) => DisplayClients();
 
             Button btnCautare = new Button
             {
                 Text = "Caută Client",
-                Top = btnAdauga.Bottom + 20, 
+                Top = btnAdauga.Bottom + 20,
                 Left = 20,
                 Width = 200,
                 Height = 40,
@@ -239,54 +208,21 @@ namespace Formular
                 Font = new Font("Comic Sans MS", 12, FontStyle.Bold)
             };
             leftPanel.Controls.Add(btnCautare);
-
-            Label lblRezultatCautare = new Label
+            Button btnInapoi = new Button
             {
-                Top = btnCautare.Bottom + 20,
-                Left = 20,
-                Width = 200,
-                AutoSize = true,
-                Font = new Font("Comic Sans MS", 12),
-                ForeColor = Color.Black
+                Text = "Înapoi",
+                Top = btnCautare.Bottom + 20, 
+                Left = btnCautare.Left,       
+                Width = btnCautare.Width,     
+                Height = btnCautare.Height,   
+                BackColor = Color.Pink,       
+                FlatStyle = btnCautare.FlatStyle,
+                Font = btnCautare.Font        
             };
-            leftPanel.Controls.Add(lblRezultatCautare);
+            btnInapoi.Click += (sender, e) => this.Close(); 
+            leftPanel.Controls.Add(btnInapoi);
 
-            btnCautare.Click += (sender, e) =>
-            {
-                if (!string.IsNullOrEmpty(txtNume.Text) || !string.IsNullOrEmpty(txtPrenume.Text))
-                {
-                    Administrare_client adminClient = new Administrare_client();
-                    int nrClient;
-                    Persoana[] clienti = adminC.Get_persoane(out nrClient);
-                    foreach (var client in clienti)
-                    {
-                        if (client != null)
-                            adminClient.AddClient(client);
-                    }
-
-                    Persoana clientGasit = adminClient.Cautare_client(
-                        txtNume.Text.Trim(),
-                        txtPrenume.Text.Trim());
-                    if (!string.IsNullOrEmpty(clientGasit.nume) || !string.IsNullOrEmpty(clientGasit.prenume))
-                    {
-                        lblRezultatCautare.Text = "Client găsit:\n" + clientGasit.Info_p();
-                        lblRezultatCautare.ForeColor = Color.Green;
-                    }
-                    else
-                    {
-                        lblRezultatCautare.Text = "Clientul nu a fost găsit!";
-                        lblRezultatCautare.ForeColor = Color.Red;
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Introduceți numele sau prenumele clientului!",
-                                   "Eroare",
-                                   MessageBoxButtons.OK,
-                                   MessageBoxIcon.Warning);
-                }
-            };
-
+            btnCautare.Click += (sender, e) => SearchClient();
 
             mainSplitContainer.Panel1.Controls.Add(headerPanel);
             contentSplit.Panel1.Controls.Add(leftPanel);
@@ -297,10 +233,78 @@ namespace Formular
 
             this.Resize += (sender, e) =>
             {
-                listBoxClienti.Width = rightPanel.Width - 60;
+                listBoxClienti.Width = rightPanel.Width + 60;
                 listBoxClienti.Height = rightPanel.Height - btnAfiseaza.Bottom - 40;
             };
         }
+
+        private void DisplayClients()
+        {
+            int clientCount;
+            Persoana[] clientList = adminC.Get_persoane(out clientCount);
+
+            listBoxClienti.Items.Clear();
+            if (clientList != null && clientCount > 0)
+            {
+                listBoxClienti.BeginUpdate();
+                foreach (Persoana persoana in clientList)
+                {
+                    if (persoana != null)
+                    {
+                        listBoxClienti.Items.Add(persoana.Info_p());
+                    }
+                }
+                listBoxClienti.EndUpdate();
+                int requiredHeight = (listBoxClienti.Items.Count * listBoxClienti.Font.Height) + 10;
+                int maxHeight = listBoxClienti.Parent.Height - 90; 
+                listBoxClienti.Height = Math.Min(requiredHeight, maxHeight);
+            }
+            else
+            {
+                listBoxClienti.Items.Add("Nu există clienți în fișier!");
+                listBoxClienti.ForeColor = Color.Red;
+            }
+        }
+
+        private void SearchClient()
+        {
+            if (!string.IsNullOrEmpty(txtNume.Text) || !string.IsNullOrEmpty(txtPrenume.Text))
+            {
+                int nrClienti;
+                Persoana[] clienti = adminC.Get_persoane(out nrClienti);
+                Administrare_client adminClient = new Administrare_client();
+                foreach (var client in clienti)
+                {
+                    if (client != null)
+                        adminClient.AddClient(client);
+                }
+                List<Persoana> rezultate = adminClient.Cautare_Nume_Prenume(
+                    txtNume.Text.Trim(),
+                    txtPrenume.Text.Trim());
+                listBoxClienti.Items.Clear();
+
+                if (rezultate.Count > 0)
+                {
+                    listBoxClienti.Items.Add($"Rezultate căutare ({rezultate.Count}):");
+                    foreach (var client in rezultate)
+                    {
+                        listBoxClienti.Items.Add(client.Info_p());
+                    }
+                    listBoxClienti.ForeColor = Color.Green;
+                }
+                else
+                {
+                    listBoxClienti.Items.Add("Nu s-au găsit rezultate pentru criteriile specificate!");
+                    listBoxClienti.ForeColor = Color.Red;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Introduceți numele sau prenumele clientului!",
+                               "Eroare",
+                               MessageBoxButtons.OK,
+                               MessageBoxIcon.Warning);
+            }
+        }
     }
-    
 }
