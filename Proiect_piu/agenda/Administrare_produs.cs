@@ -1,4 +1,5 @@
-﻿using incercare_tema;
+using incercare_tema;
+using produs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,6 @@ namespace agenda
 {
     public class Administrare_produs
     {
-        //private const int NR_MAX_STUDENTI = 50;
-
-        //private Student[] studenti;
-        //private int nrStudenti;
         private Calculator[] pcuri;
         private int nr_prod;
         private const int nr_max_produse = 100; //numarul de calculatoare (respectiv clienti) care poate fi primit in service in acelasi 
@@ -36,43 +33,31 @@ namespace agenda
             return pcuri;
         }
 
-        public Calculator Cautare_prod(string nume_c, string marca_c)
+        public List<Calculator> Cautare_prod(string numeCautat = null, string marcaCautata = null, Servicii? scopCautat = null)
         {
-            Calculator prod_c;
-            prod_c = new Calculator(nume_c, marca_c);
+            List<Calculator> rezultate = new List<Calculator>();
+
             foreach (Calculator prod in pcuri)
             {
-                if (prod_c == prod)
+                if (prod == null) continue;
+
+                bool numeMatches = string.IsNullOrEmpty(numeCautat) ||
+                                 prod.nume.Equals(numeCautat, StringComparison.OrdinalIgnoreCase);
+
+                bool marcaMatches = string.IsNullOrEmpty(marcaCautata) ||
+                                  prod.marca.Equals(marcaCautata, StringComparison.OrdinalIgnoreCase);
+
+                bool scopMatches = !scopCautat.HasValue ||
+                                 prod.serv == scopCautat.Value;
+
+                if (numeMatches && marcaMatches && scopMatches)
                 {
-                    return prod_c;
-
+                    rezultate.Add(prod);
                 }
-
             }
-            Calculator c;
-            c = new Calculator(string.Empty, string.Empty);
-            return c;
-        }
-        /*
-        public (Student[] studenti, Clase[] clase, int nrStudenti, int nrClase) GetStudentiSiClase()
-        {
-            int nrStudenti = this.nrStudenti;
-            int nrClase = this.nrClase;
 
-            return (studenti, clase, nrStudenti, nrClase);
-        } 
-        
-        public void AddStudent(Student student)
-        {
-            studenti[nrStudenti] = student;
-            nrStudenti++;
+            return rezultate;
         }
-
-        public Student[] GetStudenti(out int nrStudenti)
-        {
-            nrStudenti = this.nrStudenti;
-            return studenti;
-        }
-        */
     }
 }
+
