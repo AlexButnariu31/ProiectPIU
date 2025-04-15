@@ -1,4 +1,4 @@
-﻿using agenda;
+using agenda;
 using incercare_tema;
 using produs;
 using System;
@@ -16,10 +16,15 @@ namespace Formular
 {
     public partial class Form2: Form
     {
+        private TextBox txtNume;
+        private TextBox txtMarca;
+        private ComboBox cmbServiciu;
+        private ListBox listBoxCalculatoare;
+        private Administrare_produs_fisier adminCalc;
         public Form2()
         {
             string numeFisier = ConfigurationManager.AppSettings["NumeFisier_pc"];
-            Administrare_produs_fisier adminCalc = new Administrare_produs_fisier(numeFisier);
+            adminCalc = new Administrare_produs_fisier(numeFisier);
 
             this.Size = new Size(1000, 650);
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -93,7 +98,7 @@ namespace Formular
             };
             leftPanel.Controls.Add(lblNume);
 
-            TextBox txtNume = new TextBox
+            txtNume = new TextBox
             {
                 Top = lblNume.Bottom + 5,
                 Left = 20,
@@ -110,7 +115,7 @@ namespace Formular
             };
             leftPanel.Controls.Add(lblMarca);
 
-            TextBox txtMarca = new TextBox
+            txtMarca = new TextBox
             {
                 Top = lblMarca.Bottom + 5,
                 Left = 20,
@@ -127,7 +132,7 @@ namespace Formular
             };
             leftPanel.Controls.Add(lblServiciu);
 
-            ComboBox cmbServiciu = new ComboBox
+            cmbServiciu = new ComboBox
             {
                 Top = lblServiciu.Bottom + 5,
                 Left = 20,
@@ -170,6 +175,34 @@ namespace Formular
             };
             leftPanel.Controls.Add(btnAdauga);
 
+            Button btnCauta = new Button
+            {
+                Text = "Caută Calculator",
+                Top = btnAdauga.Bottom + 20,
+                Left = btnAdauga.Left,
+                Width = btnAdauga.Width,
+                Height = btnAdauga.Height,
+                BackColor = Color.Gold,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Comic Sans MS", 12, FontStyle.Bold)
+            };
+            btnCauta.Click += BtnCauta_Click;
+            leftPanel.Controls.Add(btnCauta);
+
+            Button btnInapoi = new Button
+            {
+                Text = "Înapoi",
+                Top = btnCauta.Bottom + 20,
+                Left = btnAdauga.Left,       
+                Width = btnAdauga.Width,     
+                Height = btnAdauga.Height,   
+                BackColor = btnAdauga.BackColor, 
+                FlatStyle = btnAdauga.FlatStyle,
+                Font = btnAdauga.Font        
+            };
+            btnInapoi.Click += (sender, e) => this.Close();
+            leftPanel.Controls.Add(btnInapoi);
+
             Button btnAfiseaza = new Button
             {
                 Text = "Afișează Calculatoare",
@@ -182,7 +215,7 @@ namespace Formular
                 Font = new Font("Comic Sans MS", 12, FontStyle.Bold)
             };
             rightPanel.Controls.Add(btnAfiseaza);
-            ListBox listBoxCalculatoare = new ListBox
+            listBoxCalculatoare = new ListBox
             {
                 Top = btnAfiseaza.Bottom + 20,
                 Left = 20,
@@ -237,6 +270,50 @@ namespace Formular
                 int maxHeight = rightPanel.Height - btnAfiseaza.Bottom - 50;
                 listBoxCalculatoare.Height = maxHeight;
             };
+        }
+        private void BtnCauta_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtNume.Text) ||!string.IsNullOrEmpty(txtMarca.Text) || cmbServiciu.SelectedItem != null)
+            {
+                string numeCautat = !string.IsNullOrEmpty(txtNume.Text) ? txtNume.Text.Trim() : null;
+                string marcaCautata = !string.IsNullOrEmpty(txtMarca.Text) ? txtMarca.Text.Trim() : null;
+                Servicii? serviciuCautat = cmbServiciu.SelectedItem != null
+                    ? (Servicii)Enum.Parse(typeof(Servicii), cmbServiciu.SelectedItem.ToString())
+                    : (Servicii?)null;
+                Administrare_produs adminProd = new Administrare_produs();
+                int nrProduse;
+                Calculator[] produse = adminCalc.Get_produse(out nrProduse);
+
+                foreach (var prod in produse)
+                {
+                    if (prod != null)
+                        adminProd.AddProd(prod);
+                }
+
+                List<Calculator> rezultate = adminProd.Cautare_prod(numeCautat, marcaCautata, serviciuCautat);
+                listBoxCalculatoare.Items.Clear();
+                if (rezultate.Count > 0)
+                {
+                    listBoxCalculatoare.Items.Add($"Rezultate căutare ({rezultate.Count}):");
+                    foreach (var calculator in rezultate)
+                    {
+                        listBoxCalculatoare.Items.Add(calculator.Info());
+                    }
+                    listBoxCalculatoare.ForeColor = Color.Black;
+                }
+                else
+                {
+                    listBoxCalculatoare.Items.Add("Nu s-au găsit calculatoare pentru criteriile specificate!");
+                    listBoxCalculatoare.ForeColor = Color.Red;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Introduceți cel puțin un criteriu de căutare (nume, marcă sau serviciu)!",
+                               "Eroare",
+                               MessageBoxButtons.OK,
+                               MessageBoxIcon.Warning);
+            }
         }
     }
 }
