@@ -53,26 +53,27 @@ namespace agenda
             }
             return new Persoana(string.Empty, string.Empty);
         }
-        /*
-        public (Student[] studenti, Clase[] clase, int nrStudenti, int nrClase) GetStudentiSiClase()
+        public List<Persoana> Cautare_Nume_Prenume(string numeCautat, string prenumeCautat)
         {
-            int nrStudenti = this.nrStudenti;
-            int nrClase = this.nrClase;
+            List<Persoana> rezultate = new List<Persoana>();
 
-            return (studenti, clase, nrStudenti, nrClase);
-        } 
-        
-        public void AddStudent(Student student)
-        {
-            studenti[nrStudenti] = student;
-            nrStudenti++;
-        }
+            foreach (Persoana client in persoane)
+            {
+                if (client == null) continue;
 
-        public Student[] GetStudenti(out int nrStudenti)
-        {
-            nrStudenti = this.nrStudenti;
-            return studenti;
+                bool numeMatches = string.IsNullOrEmpty(numeCautat) ||
+                                 client.nume.Equals(numeCautat, StringComparison.OrdinalIgnoreCase);
+
+                bool prenumeMatches = string.IsNullOrEmpty(prenumeCautat) ||
+                                    client.prenume.Equals(prenumeCautat, StringComparison.OrdinalIgnoreCase);
+
+                if (numeMatches && prenumeMatches)
+                {
+                    rezultate.Add(new Persoana(client.nume, client.prenume));
+                }
+            }
+
+            return rezultate;
         }
-        */
     }
 }
