@@ -3,8 +3,6 @@ using produs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace agenda
 {
@@ -12,11 +10,10 @@ namespace agenda
     {
         private Calculator[] pcuri;
         private int nr_prod;
-        private const int nr_max_produse = 100; //numarul de calculatoare (respectiv clienti) care poate fi primit in service in acelasi 
-                                                //timp daca se vrea sa se mai adauge un calculator trebuie eliberat locul
+        private const int nr_max_produse = 100;
+
         public Administrare_produs()
         {
-            
             pcuri = new Calculator[nr_max_produse];
             nr_prod = 0;
         }
@@ -33,7 +30,8 @@ namespace agenda
             return pcuri;
         }
 
-        public List<Calculator> Cautare_prod(string numeCautat = null, string marcaCautata = null, Servicii? scopCautat = null)
+        public List<Calculator> Cautare_prod(string numeCautat = null, string marcaCautata = null,
+                                           string tipCautat = null, Servicii[] serviciiCautate = null)
         {
             List<Calculator> rezultate = new List<Calculator>();
 
@@ -47,17 +45,18 @@ namespace agenda
                 bool marcaMatches = string.IsNullOrEmpty(marcaCautata) ||
                                   prod.marca.Equals(marcaCautata, StringComparison.OrdinalIgnoreCase);
 
-                bool scopMatches = !scopCautat.HasValue ||
-                                 prod.serv == scopCautat.Value;
+                bool tipMatches = string.IsNullOrEmpty(tipCautat) ||
+                                prod.tip.Equals(tipCautat, StringComparison.OrdinalIgnoreCase);
 
-                if (numeMatches && marcaMatches && scopMatches)
+                bool serviciiMatches = serviciiCautate == null || serviciiCautate.Length == 0 ||
+                                     (prod.GetServicii().Intersect(serviciiCautate).Any());
+
+                if (numeMatches && marcaMatches && tipMatches && serviciiMatches)
                 {
                     rezultate.Add(prod);
                 }
             }
-
             return rezultate;
         }
     }
 }
-
