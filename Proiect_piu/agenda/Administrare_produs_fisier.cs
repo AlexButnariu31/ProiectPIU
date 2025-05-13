@@ -76,5 +76,61 @@ namespace agenda
             }
             return rezultate;
         }
+        public bool ActualizeazaProdus(Calculator vechi, Calculator nou)
+        {
+            try
+            {
+                int nrProduse;
+                Calculator[] calculatoare = Get_produse(out nrProduse);
+                for (int i = 0; i < nrProduse; i++)
+                {
+                    if (calculatoare[i] != null && calculatoare[i].nume == vechi.nume && calculatoare[i].marca == vechi.marca)
+                    {
+                        calculatoare[i] = nou;
+                        break;
+                    }
+                }
+                File.WriteAllText(nume_Fis, string.Empty);
+                foreach (var calculator in calculatoare)
+                {
+                    if (calculator != null)
+                        AddProdus(calculator);
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool StergeProdus(Calculator deSters)
+        {
+            try
+            {
+                int nrProduse;
+                Calculator[] calculatoare = Get_produse(out nrProduse);
+                List<Calculator> listaNoua = new List<Calculator>();
+                foreach (var calculator in calculatoare)
+                {
+                    if (calculator != null && !(calculator.nume == deSters.nume && calculator.marca == deSters.marca))
+                    {
+                        listaNoua.Add(calculator);
+                    }
+                }
+                File.WriteAllText(nume_Fis, string.Empty);
+                foreach (var calculator in listaNoua)
+                {
+                    AddProdus(calculator);
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
