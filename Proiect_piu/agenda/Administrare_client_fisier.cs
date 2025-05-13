@@ -1,4 +1,4 @@
-﻿using incercare_tema;
+using incercare_tema;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,6 +43,62 @@ namespace agenda
             }
 
             return clienti;
+        }
+        public bool ActualizeazaClient(Persoana vechi, Persoana nou)
+        {
+            try
+            {
+                int nrClienti;
+                Persoana[] clienti = Get_persoane(out nrClienti);
+                for (int i = 0; i < nrClienti; i++)
+                {
+                    if (clienti[i] != null && clienti[i].nume == vechi.nume && clienti[i].prenume == vechi.prenume)
+                    {
+                        clienti[i] = nou;
+                        break;
+                    }
+                }
+                File.WriteAllText(nume_Fis, string.Empty);
+                foreach (var client in clienti)
+                {
+                    if (client != null)
+                        AddClient(client);
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool StergeClient(Persoana deSters)
+        {
+            try
+            {
+                int nrClienti;
+                Persoana[] clienti = Get_persoane(out nrClienti);
+                List<Persoana> listaNoua = new List<Persoana>();
+                foreach (var client in clienti)
+                {
+                    if (client != null && !(client.nume == deSters.nume && client.prenume == deSters.prenume))
+                    {
+                        listaNoua.Add(client);
+                    }
+                }
+                File.WriteAllText(nume_Fis, string.Empty);
+                foreach (var client in listaNoua)
+                {
+                    AddClient(client);
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
