@@ -29,6 +29,25 @@ namespace Formular
         private ListBox listBoxClienti;
         private TextBox txtNume;
         private TextBox txtPrenume;
+        private Button btnEditare;
+        private Button btnStergere;
+
+        private class ListBoxItem
+        {
+            public string DisplayText { get; set; }
+            public Persoana Persoana { get; set; }
+
+            public ListBoxItem(string displayText, Persoana persoana)
+            {
+                DisplayText = displayText;
+                Persoana = persoana;
+            }
+
+            public override string ToString()
+            {
+                return DisplayText;
+            }
+        }
 
         public Form1()
         {
@@ -148,8 +167,11 @@ namespace Formular
                 Height = 40,
                 BackColor = Color.Lime,
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Comic Sans MS", 12, FontStyle.Bold)
+                Font = new Font("Comic Sans MS", 12, FontStyle.Bold),
+                ForeColor = Color.DarkBlue, 
             };
+            leftPanel.Controls.Add(btnAdauga);
+
             btnAdauga.Click += (sender, e) =>
             {
                 if (!string.IsNullOrEmpty(txtNume.Text) && !string.IsNullOrEmpty(txtPrenume.Text))
@@ -196,38 +218,77 @@ namespace Formular
 
             btnAfiseaza.Click += (sender, e) => DisplayClients();
 
+
             Button btnCautare = new Button
             {
                 Text = "Caută Client",
-                Top = btnAdauga.Bottom + 20,
-                Left = 20,
-                Width = 200,
+                Top = btnAdauga.Top,
+                Left = btnAdauga.Right + 20,
+                Width = controlWidth,
                 Height = 40,
                 BackColor = Color.Gold,
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Comic Sans MS", 12, FontStyle.Bold)
+                Font = new Font("Comic Sans MS", 12, FontStyle.Bold),
+                ForeColor = Color.DarkBlue,
             };
             leftPanel.Controls.Add(btnCautare);
+
+
+            
+            btnCautare.Click += (sender, e) => SearchClient();
+
+            btnEditare = new Button
+            {
+                Text = "Editare",
+                Top = btnAdauga.Bottom + 20,
+                Left = btnAdauga.Left, 
+                Width = controlWidth,
+                Height = 40,
+                BackColor = Color.Gold,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Comic Sans MS", 12, FontStyle.Bold),
+                ForeColor = Color.DarkBlue, 
+                Enabled = false
+            };
+            btnEditare.Click += BtnEditare_Click;
+            leftPanel.Controls.Add(btnEditare);
+
             Button btnInapoi = new Button
             {
                 Text = "Înapoi",
-                Top = btnCautare.Bottom + 20, 
-                Left = btnCautare.Left,       
-                Width = btnCautare.Width,     
-                Height = btnCautare.Height,   
-                BackColor = Color.Pink,       
-                FlatStyle = btnCautare.FlatStyle,
-                Font = btnCautare.Font        
+                Top = btnEditare.Bottom + 20,
+                Left = btnAdauga.Left,
+                Width = controlWidth,
+                Height = 40,
+                BackColor = Color.Pink,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Comic Sans MS", 12, FontStyle.Bold),
+                ForeColor = Color.DarkBlue
             };
             btnInapoi.Click += (sender, e) => this.Close(); 
             leftPanel.Controls.Add(btnInapoi);
 
-            btnCautare.Click += (sender, e) => SearchClient();
+            btnStergere = new Button
+            {
+                Text = "Ștergere",
+                Top = btnEditare.Top, 
+                Left = btnCautare.Left, 
+                Width = controlWidth,
+                Height = 40,
+                BackColor = Color.Pink,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Comic Sans MS", 12, FontStyle.Bold),
+                ForeColor = Color.DarkBlue, 
+                Enabled = false
+            };
+            btnStergere.Click += BtnStergere_Click;
+            leftPanel.Controls.Add(btnStergere);
 
             mainSplitContainer.Panel1.Controls.Add(headerPanel);
             contentSplit.Panel1.Controls.Add(leftPanel);
             contentSplit.Panel2.Controls.Add(rightPanel);
             mainSplitContainer.Panel2.Controls.Add(contentSplit);
+            listBoxClienti.SelectedIndexChanged += ListBoxClienti_SelectedIndexChanged;
 
             this.Controls.Add(mainSplitContainer);
 
@@ -251,12 +312,13 @@ namespace Formular
                 {
                     if (persoana != null)
                     {
-                        listBoxClienti.Items.Add(persoana.Info_p());
+                        // Use ListBoxItem instead of direct string
+                        listBoxClienti.Items.Add(new ListBoxItem(persoana.Info_p(), persoana));
                     }
                 }
                 listBoxClienti.EndUpdate();
                 int requiredHeight = (listBoxClienti.Items.Count * listBoxClienti.Font.Height) + 10;
-                int maxHeight = listBoxClienti.Parent.Height - 90; 
+                int maxHeight = listBoxClienti.Parent.Height - 90;
                 listBoxClienti.Height = Math.Min(requiredHeight, maxHeight);
             }
             else
@@ -264,6 +326,93 @@ namespace Formular
                 listBoxClienti.Items.Add("Nu există clienți în fișier!");
                 listBoxClienti.ForeColor = Color.Red;
             }
+        }
+        private void ListBoxClienti_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBoxClienti.SelectedIndex >= 0)
+            {
+                var selectedItem = listBoxClienti.SelectedItem as ListBoxItem;
+                if (selectedItem != null)
+                {
+                    txtNume.Text = selectedItem.Persoana.nume;
+                    txtPrenume.Text = selectedItem.Persoana.prenume;
+                    btnEditare.Enabled = true;
+                    btnStergere.Enabled = true;
+                }
+            }
+            else
+            {
+                btnEditare.Enabled = false;
+                btnStergere.Enabled = false;
+            }
+        }
+
+        private void BtnEditare_Click(object sender, EventArgs e)
+        {
+            if (listBoxClienti.SelectedIndex < 0)
+            {
+                MessageBox.Show("Selectați un client pentru editare!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var selectedItem = listBoxClienti.SelectedItem as ListBoxItem;
+            if (selectedItem == null) return;
+
+            if (string.IsNullOrEmpty(txtNume.Text) || string.IsNullOrEmpty(txtPrenume.Text))
+            {
+                MessageBox.Show("Completați numele și prenumele!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Persoana originalClient = selectedItem.Persoana;
+            Persoana updatedClient = new Persoana(txtNume.Text, txtPrenume.Text);
+
+            if (adminC.ActualizeazaClient(originalClient, updatedClient))
+            {
+                MessageBox.Show("Client actualizat cu succes!", "Succes", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DisplayClients();
+                ClearInput();
+            }
+            else
+            {
+                MessageBox.Show("Eroare la actualizarea clientului!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void BtnStergere_Click(object sender, EventArgs e)
+        {
+            if (listBoxClienti.SelectedIndex < 0)
+            {
+                MessageBox.Show("Selectați un client pentru ștergere!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var selectedItem = listBoxClienti.SelectedItem as ListBoxItem;
+            if (selectedItem == null) return;
+
+            if (MessageBox.Show("Sigur doriți să ștergeți acest client?", "Confirmare ștergere",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                if (adminC.StergeClient(selectedItem.Persoana))
+                {
+                    MessageBox.Show("Client șters cu succes!", "Succes", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DisplayClients();
+                    ClearInput();
+                }
+                else
+                {
+                    MessageBox.Show("Eroare la ștergerea clientului!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void ClearInput()
+        {
+            txtNume.Clear();
+            txtPrenume.Clear();
+            listBoxClienti.ClearSelected();
+            btnEditare.Enabled = false;
+            btnStergere.Enabled = false;
         }
 
         private void SearchClient()
