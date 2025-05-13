@@ -238,13 +238,42 @@ namespace Formular
             btnCauta.Click += BtnCauta_Click;
             panel.Controls.Add(btnCauta);
 
+            Button btnEditare = new Button
+            {
+                Text = "Editare",
+                Top = btnAdauga.Top,
+                Left = btnAdauga.Right + 20,
+                Width = btnAdauga.Width,
+                Height = btnAdauga.Height,
+                BackColor = Color.Gold,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Comic Sans MS", 12, FontStyle.Bold)
+            };
+            btnEditare.Click += BtnEditare_Click;
+            panel.Controls.Add(btnEditare);
+
+            // New Delete button (placed to the right of Search button)
+            Button btnStergere = new Button
+            {
+                Text = "Ștergere",
+                Top = btnCauta.Top,
+                Left = btnCauta.Right + 20,
+                Width = btnCauta.Width,
+                Height = btnCauta.Height,
+                BackColor = Color.Gold,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Comic Sans MS", 12, FontStyle.Bold)
+            };
+            btnStergere.Click += BtnStergere_Click;
+            panel.Controls.Add(btnStergere);
+
             Button btnInapoi = new Button
             {
                 Text = "Înapoi",
                 Top = btnCauta.Bottom + 20,
-                Left = btnAdauga.Left,
-                Width = btnAdauga.Width,
-                Height = btnAdauga.Height,
+                Left = btnCauta.Left,
+                Width = btnCauta.Width,
+                Height = btnCauta.Height,
                 BackColor = btnAdauga.BackColor,
                 FlatStyle = btnAdauga.FlatStyle,
                 Font = btnAdauga.Font
@@ -282,7 +311,10 @@ namespace Formular
             };
             panel.Controls.Add(listBoxCalculatoare);
 
-            btnAfiseaza.Click += (sender, e) => DisplayComputers();
+            listBoxCalculatoare.SelectedIndexChanged += ListBoxCalculatoare_SelectedIndexChanged;
+
+            btnAfiseaza.Click += (sender, e) => DisplayCalculatoare();
+
         }
 
         private void AdjustListBoxSize(Panel panel)
@@ -321,7 +353,7 @@ namespace Formular
 
                 adminCalc.AddProdus(newComputer);
                 MessageBox.Show("Calculator adăugat cu succes!", "Succes", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                ClearInputFields();
+                ClearInput();
             }
             else
             {
@@ -329,7 +361,7 @@ namespace Formular
             }
         }
 
-        private void ClearInputFields()
+        private void ClearInput()
         {
             txtNume.Clear();
             txtMarca.Clear();
@@ -340,7 +372,7 @@ namespace Formular
             }
         }
 
-        private void DisplayComputers()
+        private void DisplayCalculatoare()
         {
             int computerCount;
             Calculator[] computerList = adminCalc.Get_produse(out computerCount);
@@ -353,7 +385,7 @@ namespace Formular
                 {
                     if (calculator != null)
                     {
-                        listBoxCalculatoare.Items.Add(calculator.Info());
+                        listBoxCalculatoare.Items.Add(new ListBoxOb(calculator.Info(), calculator));
                     }
                 }
                 listBoxCalculatoare.EndUpdate();
@@ -364,7 +396,112 @@ namespace Formular
                 listBoxCalculatoare.ForeColor = Color.Red;
             }
         }
+        private class ListBoxOb
+        {
+            public string DisplayText { get; set; }
+            public Calculator PC { get; set; }
 
+            public ListBoxOb(string displayText, Calculator _pc)
+            {
+                DisplayText = displayText;
+                PC = _pc;
+            }
+
+            public override string ToString()
+            {
+                return DisplayText;
+            }
+        }
+        private void ListBoxCalculatoare_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBoxCalculatoare.SelectedIndex >= 0)
+            {
+                var selectedItem = listBoxCalculatoare.SelectedItem as ListBoxOb;
+                if (selectedItem != null)
+                {
+                    Calculator calculatorSelectat = selectedItem.PC;
+                    txtNume.Text = calculatorSelectat.nume;
+                    txtMarca.Text = calculatorSelectat.marca;
+                    foreach (var radioButton in typeRadioButtons)
+                    {
+                        radioButton.Checked = (radioButton.Tag.ToString() == calculatorSelectat.tip.ToLower());
+                    }
+
+                    foreach (var checkBox in serviceCheckBoxes)
+                    {
+                        checkBox.Checked = calculatorSelectat.GetServicii().Contains((Servicii)checkBox.Tag);
+                    }
+                }
+            }
+        }
+        private void BtnEditare_Click(object sender, EventArgs e)
+        {
+            if (listBoxCalculatoare.SelectedIndex < 0)
+            {
+                MessageBox.Show("Selectați un calculator pentru editare!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            var Obselectat = listBoxCalculatoare.SelectedItem as ListBoxOb;
+            if (Obselectat == null) return;
+            Calculator originalComputer = Obselectat.PC;
+            string TipSelec = typeRadioButtons.FirstOrDefault(r => r.Checked)?.Tag.ToString();
+            List<Servicii> ServSelec = new List<Servicii>();
+            foreach (var checkBox in serviceCheckBoxes)
+            {
+                if (checkBox.Checked)
+                {
+                    ServSelec.Add((Servicii)checkBox.Tag);
+                }
+            }
+
+            if (ServSelec.Count == 0)
+            {
+                MessageBox.Show("Selectați cel puțin un serviciu!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Calculator updatedComputer = new Calculator(
+                txtNume.Text,
+                txtMarca.Text,
+                TipSelec,
+                ServSelec.ToArray());
+            if (adminCalc.ActualizeazaProdus(originalComputer, updatedComputer))
+            {
+                MessageBox.Show("Calculator actualizat cu succes!", "Succes", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DisplayCalculatoare();
+                ClearInput();
+            }
+            else
+            {
+                MessageBox.Show("Eroare la actualizarea calculatorului!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void BtnStergere_Click(object sender, EventArgs e)
+        {
+            if (listBoxCalculatoare.SelectedIndex < 0)
+            {
+                MessageBox.Show("Selectați un calculator pentru ștergere!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var selectedItem = listBoxCalculatoare.SelectedItem as ListBoxOb;
+            if (selectedItem == null) return;
+
+            if (MessageBox.Show("Sigur doriți să ștergeți acest calculator?", "Confirmare ștergere",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                if (adminCalc.StergeProdus(selectedItem.PC))
+                {
+                    MessageBox.Show("Calculator șters cu succes!", "Succes", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DisplayCalculatoare();
+                    ClearInput();
+                }
+                else
+                {
+                    MessageBox.Show("Eroare la ștergerea calculatorului!", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
         private void BtnCauta_Click(object sender, EventArgs e)
         {
             string numeCautat = !string.IsNullOrEmpty(txtNume.Text) ? txtNume.Text.Trim() : null;
